@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class HealthManager : MonoBehaviour
     public Image healthBar;
     public float healthAmount = 100f;
 
+    public event Action OnHealthReachedZero;
     void Update()
     {
 
@@ -17,6 +19,11 @@ public class HealthManager : MonoBehaviour
     {
         healthAmount -= damage;
         healthBar.fillAmount = healthAmount / 100f;
+        if (healthAmount <= 0)
+        {
+            healthAmount = 0;
+            OnHealthReachedZero?.Invoke();
+        }
     }
     public void heal(float healingAmount)
     {

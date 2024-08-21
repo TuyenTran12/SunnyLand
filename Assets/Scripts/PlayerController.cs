@@ -1,33 +1,51 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private float moveSpeed = 6f; // Character speed
-    private float jumpPower = 13f;// Character jump
-
-    private float horizontal;
-
+    public Rigidbody2D rb;
+    //Check if player touch ground
+    public Transform GroundCheck;
+    const float GroundCheckRadius = .2f;
+    public LayerMask groundLayer;
     private bool isTouchGround;
 
-    public Transform GroundCheck;
-    public float GroundCheckRadius;
-    public LayerMask groundLayer;
+    public Collider2D standingCollider; // Player stand or crouch
 
-    [SerializeField] private Rigidbody2D rb;
+    //Check if player head touch something
+    public Transform OverHeadCheck;
+    const float OverHeadCheckRadius = .2f;
+    
+    //Move character
+    private float horizontal;
+    private float moveSpeed = 6f; // Character speed
+    private float jumpPower = 13f;// Character jump
+    private float moveSpeedCrouch = 3f; //Speed when crouch
 
+    // ANIMATION
     private Animator playerAnimation;
+    private bool crouch;
+    private bool isTouchEnemy;
 
+    //TELEPORTER
     Vector2 checkPointPos;
+    private GameObject currentTeleporter; //Position player will tele when player die
 
     GameController gameController;
-
     HealthManager m_healthBar;
 
-    private GameObject currentTeleporter;
+    //Physics when touch enemy
+    private float KBForce = 5f; // Lực đẩy lùi
+    private float KBCounter;
+    private float KBTotalTime = 0.5f; // Thời gian bị đẩy lùi
 
-    // Start is called before the first frame update
+    private bool KnockFromRight;
+
+    private float invincibilityDuration = 0.5f;
+    private float touchEnemyDuration = 0.5f;
+    private bool isInvincible = false;
+
+
     void Start()
     {
         checkPointPos = transform.position;
@@ -36,9 +54,9 @@ public class PlayerController : MonoBehaviour
         playerAnimation = GetComponent<Animator>();
         gameController = FindObjectOfType<GameController>();
         m_healthBar = FindObjectOfType<HealthManager>();
+
     }
 
-    // Update is called once per frame
     void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
@@ -47,48 +65,73 @@ public class PlayerController : MonoBehaviour
 
         isTouchGround = Physics2D.OverlapCircle(GroundCheck.position, GroundCheckRadius, groundLayer); // isTouchGround
 
-        if (Input.GetButtonDown("Jump") && isTouchGround) // Jump
-        {
-            rb.velocity = Vector2.up * jumpPower;
-            isTouchGround = false;
-        }
+        Button();
+        Move();
 
-        if (m_healthBar.healthAmount == 0) // Gameover
+        if(m_healthBar.healthAmount <= 0f)
         {
             Die();
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (currentTeleporter != null)
-            {
-                transform.position = currentTeleporter.GetComponent<Teleporter>().GetDestination().position;
-            }
-        }
 
         playerAnimation.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
-        playerAnimation.SetBool("OnGround", isTouchGround);
         playerAnimation.SetFloat("yVelocity", rb.velocity.y);
-    }
 
+        playerAnimation.SetBool("OnGround", isTouchGround);     
+        playerAnimation.SetBool("Crouch", crouch);
+        playerAnimation.SetBool("isTouchEnemy", isTouchEnemy);
+    }
+   
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(horizontal * moveSpeed, rb.velocity.y);
+        if(KBCounter <= 0)
+        {
+            rb.velocity = new Vector2(horizontal * moveSpeed, rb.velocity.y);
+        }
+        else
+        {
+            if(KnockFromRight == true)
+            {
+                rb.velocity = new Vector2(-KBForce, rb.velocity.y);
+            }
+            if (KnockFromRight == false)
+            {
+                rb.velocity = new Vector2(KBForce, rb.velocity.y);
+            }
+
+            KBCounter -= Time.deltaTime;
+        }
+
+        bool isObstructedAbove = Physics2D.OverlapCircle(OverHeadCheck.position, OverHeadCheckRadius, groundLayer);
+
+        // Nếu có vật cản phía trên, bắt buộc phải cúi
+        if (isObstructedAbove)
+        {
+            crouch = true;
+        }
+        else
+        {
+            if (Input.GetButton("Crouch"))
+                crouch = true;
+            else
+                crouch = false;
+        }
     }
 
-    private void Flip()
-    {
-        if (horizontal > 0f)
-            transform.localScale = new Vector2(5, 5);
-        else if (horizontal < 0f)
-            transform.localScale = new Vector2(-5, 5);
-    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy") && !isInvincible)
         {
+            KBCounter = KBTotalTime;
+
+            if (collision.transform.position.x <= transform.position.x)
+                KnockFromRight = false;
+            if (collision.transform.position.x > transform.position.x)
+                KnockFromRight = true;
+
             m_healthBar.takeDamage(10);
-            rb.velocity = new Vector2(rb.velocity.x - 3f, rb.velocity.y);
+            StartCoroutine(InvincibilityCoroutine());
+            StartCoroutine(TouchEnemyCoroutine());
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -113,6 +156,7 @@ public class PlayerController : MonoBehaviour
             gameController.AddGem();
         }
     }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Teleporter"))
@@ -120,11 +164,56 @@ public class PlayerController : MonoBehaviour
             currentTeleporter = null;
         }
     }
+    #region Move character and key button
+    private void Button()
+    {
+        if (Input.GetButtonDown("Jump") && isTouchGround) // Jump
+        {
+            rb.velocity = Vector2.up * jumpPower;
+            isTouchGround = false;
+        }
+        if (Input.GetKeyDown(KeyCode.E)) //Teleporter
+        {
+            if (currentTeleporter != null)
+            {
+                transform.position = currentTeleporter.GetComponent<Teleporter>().GetDestination().position;
+            }
+        }
+        if (Input.GetButtonDown("Crouch"))// Cúi xuống( Crouch )
+        {
+            crouch = true;
+        }
+        if (Input.GetButtonUp("Crouch"))
+        {
+            crouch = false;
+        }
+    }
+    private void Move()
+    {
+        if (isTouchGround)
+        {
+            standingCollider.enabled = !crouch;
+        }
+        if (!crouch)
+        {
+            if (Physics2D.OverlapCircle(OverHeadCheck.position, OverHeadCheckRadius, groundLayer))
+                crouch = true;
+        }
+    }
+    private void Flip()
+    {
+        if (horizontal > 0f)
+            transform.localScale = new Vector2(1, 1);
+        else if (horizontal < 0f)
+            transform.localScale = new Vector2(-1, 1);
+    }
+    #endregion
+    #region Checkpoint
     public void UpdateCheckPoint(Vector2 pos)
     {
         checkPointPos = pos;
     }
-    IEnumerator Respawn(float duration) // Checkpoint
+    IEnumerator Respawn(float duration) 
     {
         rb.velocity = new Vector2(0, 0);
         rb.simulated = false;
@@ -134,10 +223,35 @@ public class PlayerController : MonoBehaviour
         transform.localScale = new Vector3(1, 1, 1);
         rb.simulated = true;
     }
+    #endregion
+    # region Make character invincibiltiy whem touch enemy and Animation hurt 
+    private IEnumerator InvincibilityCoroutine()
+    {
+        isInvincible = true;
+        yield return new WaitForSeconds(invincibilityDuration);
+        isInvincible = false;
+    }
+    
+    private IEnumerator TouchEnemyCoroutine()
+    {
+        isTouchEnemy = true;
+        yield return new WaitForSeconds(touchEnemyDuration);
+        isTouchEnemy = false;
+    }
+    #endregion
+
     public void Die()
     {
         m_healthBar.healthAmount = 100f;
         m_healthBar.healthBar.fillAmount = 1f;
         StartCoroutine(Respawn(0.5f));
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(GroundCheck.position, GroundCheckRadius);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(OverHeadCheck.position, OverHeadCheckRadius);
     }
 }

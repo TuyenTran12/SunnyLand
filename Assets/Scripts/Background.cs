@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Background : MonoBehaviour
 {
-    public float relativeMove = 0.3f;
-    public Vector2 offset;
+    [SerializeField] float relativeMove = 0.3f;
+    [SerializeField] Vector2 offset;
     private Vector3 startPos;
 
     void Start()

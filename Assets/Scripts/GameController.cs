@@ -53,11 +53,11 @@ public class GameController : MonoBehaviour
     public void AddCherry()
     {
         Cherry++;
-        txtCountCherrysText.text = ": " + Cherry;
+        txtCountCherrysText.text = Cherry.ToString();
     }
     public void AddGem()
     {
         Gem++;
-        txtCountGemsText.text = ": " + Gem;
+        txtCountGemsText.text = Gem.ToString();
     }
 }

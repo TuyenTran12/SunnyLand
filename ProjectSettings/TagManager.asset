@@ -20,8 +20,8 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
-  - 
+  - Player
+  - Item
   - 
   - 
   - 
@@ -59,6 +59,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: x
+  - name: FarFromPlayer
     uniqueID: 2296723629
     locked: 0
