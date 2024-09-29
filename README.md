@@ -17,7 +17,8 @@ Sunny Land is a 2D side-scrolling platform game in which players control Fox
 
 * Press A to move left and D to move right
 * Press Space to Jump ( Entering the monster's head will destroy them )
-* Press S to crouch
+* Press F to collect items, see infomation items
+* Press B to open bag
 * Secret locations will have a random gate. Press E to enter the mysterious area
   
 ### Collectibles:
