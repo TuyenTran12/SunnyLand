@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2246559724490975125}
   - component: {fileID: 871701539463008673}
-  - component: {fileID: 654068181562405429}
   m_Layer: 0
   m_Name: GroundCheck
   m_TagString: Hit
@@ -78,20 +77,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.9021463, y: 0.2911725}
   m_EdgeRadius: 0
---- !u!114 &654068181562405429
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1393549859655031028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5573eae7ea27e6548981b7cb7a830222, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bounce: 5
-  rb: {fileID: 1445587355669667965}
 --- !u!1 &4466740799560558121
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,6 +117,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8841989499811790723}
+  - component: {fileID: 5612855623498101303}
   - component: {fileID: 5691111344299456617}
   - component: {fileID: 7171168707300830661}
   - component: {fileID: 3799116037290800411}
@@ -165,6 +151,32 @@ Transform:
   - {fileID: 5318392543523405526}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5612855623498101303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5552352115259355793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c381709e2821744088647967a8def0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isOpen: 0
+  items: []
+  ui_Window: {fileID: 0}
+  items_images:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  ui_Description_Window: {fileID: 0}
+  description_Image: {fileID: 0}
+  description_Text: {fileID: 0}
+  description_Name: {fileID: 0}
 --- !u!114 &5691111344299456617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,7 +194,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  standingCollider: {fileID: 5981591202705890516}
   OverHeadCheck: {fileID: 5318392543523405526}
 --- !u!114 &7171168707300830661
 MonoBehaviour:
@@ -199,7 +210,13 @@ MonoBehaviour:
   detectionPoint: {fileID: 3322781292004412921}
   detectionLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
+  detectedObject: {fileID: 0}
+  examineWindow: {fileID: 0}
+  examineImage: {fileID: 0}
+  examineText: {fileID: 0}
+  isExamining: 0
+  pickedItems: []
 --- !u!114 &3799116037290800411
 MonoBehaviour:
   m_ObjectHideFlags: 0

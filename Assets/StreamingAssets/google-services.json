@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "97329856436",
+    "firebase_url": "https://sunnyland-f20cd-default-rtdb.firebaseio.com",
+    "project_id": "sunnyland-f20cd",
+    "storage_bucket": "sunnyland-f20cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97329856436:android:fef99c0dc9a26cdecafce1",
+        "android_client_info": {
+          "package_name": "com.TuyenTran.SunnyLand"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD85Ill_4ry_S0Vp-zp1dM_52PojhT3fuw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

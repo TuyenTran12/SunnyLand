@@ -13,6 +13,7 @@ TagManager:
   - Dead
   - Cherry
   - Gem
+  - Audio
   layers:
   - Default
   - TransparentFX
