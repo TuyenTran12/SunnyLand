@@ -2,6 +2,9 @@
 
 ### Hello guys, my name is Tuyen, I'm from Vietnam, this is my game platformer project I've done, so there will be some mistakes, please forgive me. Hope you enjoy it
 
+# ATTENTION
+### Go to this link SunnyLandSunnyLandAssets and compress the firebase file because it is so large that I can't upload the file to github. I hope you understand this error and please compress it to help me run the game. Thank you everyone
+
 ## Take a look at the game's images
 
 ![Capture](https://github.com/user-attachments/assets/a3ce1590-8d8e-452b-bbe2-d26ef61ac8ad)
@@ -49,5 +52,7 @@ Asets: https://assetstore.unity.com/packages/2d/characters/sunny-land-103349?srs
 
 ## Note
 ### Currently the game is still in development, I'm still thinking about what the maps will be like and what the coins and chests are used for. If there are any errors in the game, please sympathize and give me feedback. Thank you very much!
+
+
   
 
