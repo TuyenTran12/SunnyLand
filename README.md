@@ -3,7 +3,7 @@
 ### Hello guys, my name is Tuyen, I'm from Vietnam, this is my game platformer project I've done, so there will be some mistakes, please forgive me. Hope you enjoy it
 
 # ATTENTION
-### Go to this link SunnyLandSunnyLandAssets and compress the firebase file because it is so large that I can't upload the file to github. I hope you understand this error and please compress it to help me run the game. Thank you everyone
+### Go to the Assets file and compress the firebase file because it's so large that I can't upload the file to github. I hope you understand this error and please compress it to help me run the game. Thank you everyone
 
 ## Take a look at the game's images
 
